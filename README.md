@@ -5,5 +5,5 @@ Para la compilación del proyecto son necesarias las siguientes librerias:
 - NfcApdater.h (Carpeta libraries > NDEF)
 - LiquidCrystal_I2C.h (Carpeta libraries)
 - EthernetESP32.h (Carpeta libraries)
-- HTTPClient.h (Carpeta libraries)
+- HTTPClient.h (Carpeta libraries > WebServer_WT32_ETH01)
 - ArduinoJson.h (Biblioteca Arduino IDE)
