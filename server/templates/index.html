@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Acceso</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+    <h1 class="text-center mb-4">Control de Acceso</h1>
+
+    <!-- Agregar UID -->
+    <h3>Añadir UID</h3>
+    <form method="POST" action="/agregar_uid" class="mb-4">
+        <input type="text" name="uid" class="form-control mb-2" placeholder="Introduce un UID" required>
+        <input type="text" name="alias" class="form-control mb-2" placeholder="Introduce un alias (opcional)">
+        <button type="submit" class="btn btn-primary">Agregar</button>
+    </form>
+
+    <!-- Lista de UID autorizados -->
+    <h3>UIDs Autorizados</h3>
+    <ul class="list-group mb-4">
+        {% for id, uid, alias, activo in uids_autorizados %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ alias or "Sin alias" }}</strong><br>
+                <small>{{ uid }}</small><br>
+                {% if activo %}
+                    <span class="badge bg-success">Activo</span>
+                {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                {% endif %}
+            </div>
+            <div>
+                <a href="{{ url_for('suspend', uid=uid) }}" class="btn btn-warning btn-sm">
+                    {% if activo %}Desactivar{% else %}Activar{% endif %}
+                </a>
+                <a href="{{ url_for('eliminar_uid', uid=uid) }}" class="btn btn-danger btn-sm">Eliminar</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Historial de accesos -->
+    <h3>Historial de Accesos</h3>
+    <table class="table table-striped mb-4">
+        <thead>
+            <tr>
+                <th>UID</th>
+                <th>Fecha y Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for id, uid, timestamp in historial %}
+            <tr>
+                <td>{{ uid }}</td>
+                <td>{{ timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Filtros para la descarga -->
+    <h3>Informe de Accesos</h3>
+    <form method="GET" action="/descargar_informe" class="mb-5">
+        <div class="mb-3">
+            <label for="uid" class="form-label">UID:</label>
+            <input type="text" name="uid" class="form-control" placeholder="Filtrar por UID">
+        </div>
+        <div class="mb-3">
+            <label for="fecha_inicio" class="form-label">Fecha Inicio:</label>
+            <input type="date" name="fecha_inicio" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="fecha_fin" class="form-label">Fecha Fin:</label>
+            <input type="date" name="fecha_fin" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="hora_inicio" class="form-label">Hora Inicio:</label>
+            <input type="time" name="hora_inicio" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="hora_fin" class="form-label">Hora Fin:</label>
+            <input type="time" name="hora_fin" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success">Descargar informe</button>
+    </form>
+
+    <!-- Botón para descargar log -->
+    <h3 class="mt-4">Descargar Informe completo</h3>
+    <a href="{{ url_for('descargar_log') }}" class="btn btn-success mt-3">Descargar Log</a>
+
+    <footer class="mt-5 text-center">
+        <p>© 2025 TFG Control de Acceso. Universidad de Málaga.</p>
+    </footer>
+</body>
+</html>
